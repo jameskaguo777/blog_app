@@ -17,6 +17,7 @@ class _HomePage extends State<HomePage> {
         initialIndex: 0,
               child: Scaffold(
           appBar: AppBar(
+            title: Text('Swash Competition'),
             bottom: TabBar(tabs: [
               Tab(child: Text('MY VOTES'),),
               Tab(child: Text('LEAGUE TABLE'),),
