@@ -11,21 +11,27 @@ class HomePage extends StatefulWidget {
 class _HomePage extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: DefaultTabController(
-        length: 4,
-        initialIndex: 0,
-              child: Scaffold(
-          appBar: AppBar(
-            title: Text('Swash Competition'),
-            bottom: TabBar(tabs: [
-              Tab(child: Text('MY VOTES'),),
-              Tab(child: Text('LEAGUE TABLE'),),
-              Tab(child: Text('EVENTS'),),
-              Tab(child: Text('WASH AMBASSADORS'),),
-            ],),
-          ),
-          body: TabBarView(
+    return DefaultTabController(
+      length: 4,
+      initialIndex: 0,
+            child: Scaffold(
+        appBar: AppBar(
+          title: Text('Swash Competition'),
+          bottom: TabBar(
+            automaticIndicatorColorAdjustment: true,
+            indicatorSize: TabBarIndicatorSize.tab,
+            labelStyle: TextStyle(
+              fontSize: 10
+            ),
+            tabs: [
+            Tab(child: Text('MY VOTES'),),
+            Tab(child: Text('LEAGUE TABLE'),),
+            Tab(child: Text('EVENTS'),),
+            Tab(child: Text('WASH AMBASSADORS'),),
+          ],),
+        ),
+        body: SafeArea(
+                  child: TabBarView(
             children: [
               MyVotes(),
               LeagueTable(),
@@ -33,6 +39,9 @@ class _HomePage extends State<HomePage> {
               WashAmbassadorsTab(),
             ],
           ),
+        ),
+        drawer: Drawer(
+          child: Text('data'),
         ),
       ),
     );
