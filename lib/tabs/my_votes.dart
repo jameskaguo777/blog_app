@@ -9,6 +9,7 @@ class _MyVotes extends State<MyVotes> {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
           _voting(),
@@ -31,7 +32,11 @@ class _MyVotes extends State<MyVotes> {
           padding: const EdgeInsets.all(8.0),
           child: Text('To what percent is this school toilet clean? 2019'),
           color: Colors.white,
-        )
+        ),
+        Wrap(
+          direction: Axis.vertical,
+          children: [],
+        ),
       ],
     ),
   );

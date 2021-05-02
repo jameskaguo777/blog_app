@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:swash_comp/drawer/drawer_widget.dart';
 import 'package:swash_comp/tabs/events.dart';
 import 'package:swash_comp/tabs/league_table.dart';
 import 'package:swash_comp/tabs/my_votes.dart';
@@ -40,9 +41,7 @@ class _HomePage extends State<HomePage> {
             ],
           ),
         ),
-        drawer: Drawer(
-          child: Text('data'),
-        ),
+        drawer: DrawerWidgetT(),
       ),
     );
   }
