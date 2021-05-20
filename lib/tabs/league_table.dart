@@ -10,9 +10,7 @@ class _LeagueTable extends State<LeagueTable> {
     return Container(
       width: MediaQuery.of(context).size.width,
       child: Column(
-        children: [
-          _leagues(context)
-        ],
+        children: [_leagues(context)],
       ),
     );
   }
@@ -26,17 +24,85 @@ class _LeagueTable extends State<LeagueTable> {
           children: [
             Text('Challenge Results:'),
             Container(
-              width: double.infinity,
-              margin: const EdgeInsets.fromLTRB(0, 8.0, 0, 8.0),
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Form(child: DropdownButtonFormField(items: [
-                    
-                  ],))
-                ],
-              )
-            ),
+                width: double.infinity,
+                margin: const EdgeInsets.fromLTRB(0, 8.0, 0, 8.0),
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Form(
+                        child: DropdownButtonFormField<String>(
+                          // value: _ratingController,
+                          items: [
+                            'Current Challenge Results',
+                            'Mtakuja Challenge',
+                            'Majuma anasemaje',
+                            'Mlimwa Shule',
+                            'Kwanini Primary School'
+                          ]
+                              .map((label) => DropdownMenuItem(
+                                    child: Text(label),
+                                    value: label,
+                                  ))
+                              .toList(),
+                          hint: Text('Choose a challenge'),
+                          onChanged: (value) {
+                            setState(() {
+                              // _ratingController = value;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    DataTable(
+                      
+                      columns: const <DataColumn>[
+                        DataColumn(
+                          label: Text(
+                            'No.',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'School Name',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Score %',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                      ],
+                      rows: const <DataRow>[
+                        DataRow(
+                          cells: <DataCell>[
+                            DataCell(Text('1')),
+                            DataCell(Text('Mwajuma School')),
+                            DataCell(Text('69')),
+                          ],
+                        ),
+                        DataRow(
+                          cells: <DataCell>[
+                            DataCell(Text('2')),
+                            DataCell(Text('Maendeleo ni Lazima School')),
+                            DataCell(Text('63')),
+                          ],
+                        ),
+                        DataRow(
+                          cells: <DataCell>[
+                            DataCell(Text('3')),
+                            DataCell(Text('Mnasemaje School')),
+                            DataCell(Text('53')),
+                          ],
+                        ),
+                      ],
+                    )
+                  ],
+                )),
           ],
         ),
       );

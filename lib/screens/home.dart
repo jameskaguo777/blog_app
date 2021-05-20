@@ -32,7 +32,11 @@ class _HomePage extends State<HomePage> {
           ],),
         ),
         body: SafeArea(
-                  child: TabBarView(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+                    child: TabBarView(
+                      
             children: [
               MyVotes(),
               LeagueTable(),
@@ -40,6 +44,7 @@ class _HomePage extends State<HomePage> {
               WashAmbassadorsTab(),
             ],
           ),
+                  ),
         ),
         drawer: DrawerWidgetT(),
       ),
