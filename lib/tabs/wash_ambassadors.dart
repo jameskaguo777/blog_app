@@ -44,50 +44,53 @@ class _WashAmbassadorsTab extends State<WashAmbassadorsTab> {
                             prefixIcon: Icon(Icons.search)),
                       )),
                     ),
-                    DataTable(
-                      columns: const <DataColumn>[
-                        DataColumn(
-                          label: Text(
-                            'No.',
-                            style: TextStyle(fontStyle: FontStyle.italic),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: DataTable(
+                        columns: const <DataColumn>[
+                          DataColumn(
+                            label: Text(
+                              'No.',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
                           ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Ambassador Name',
-                            style: TextStyle(fontStyle: FontStyle.italic),
+                          DataColumn(
+                            label: Text(
+                              'Ambassador Name',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
                           ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Votes',
-                            style: TextStyle(fontStyle: FontStyle.italic),
+                          DataColumn(
+                            label: Text(
+                              'Votes',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
                           ),
-                        ),
-                      ],
-                      rows: const <DataRow>[
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('1')),
-                            DataCell(Text('Jane Saxa')),
-                            DataCell(Text('69')),
-                          ],
-                        ),
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('2')),
-                            DataCell(Text('Odo Mido')),
-                            DataCell(Text('63')),
-                          ],
-                        ),
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('3')),
-                            DataCell(Text('Okolo Michael')),
-                            DataCell(Text('53')),
-                          ],
-                        ),
-                      ],
+                        ],
+                        rows: const <DataRow>[
+                          DataRow(
+                            cells: <DataCell>[
+                              DataCell(Text('1')),
+                              DataCell(Text('Jane Saxa')),
+                              DataCell(Text('69')),
+                            ],
+                          ),
+                          DataRow(
+                            cells: <DataCell>[
+                              DataCell(Text('2')),
+                              DataCell(Text('Odo Mido')),
+                              DataCell(Text('63')),
+                            ],
+                          ),
+                          DataRow(
+                            cells: <DataCell>[
+                              DataCell(Text('3')),
+                              DataCell(Text('Okolo Michael')),
+                              DataCell(Text('53')),
+                            ],
+                          ),
+                        ],
+                      ),
                     )
                   ],
                 )),

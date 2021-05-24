@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:v2/drawer/drawer_widget.dart';
 import 'package:v2/tabs/events.dart';

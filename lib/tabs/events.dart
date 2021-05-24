@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:v2/screens/challenge_details.dart';
 import 'package:v2/screens/event.dart';
 
 class EventsTab extends StatefulWidget {
@@ -126,7 +127,21 @@ class _EventsTab extends State<EventsTab> {
                     Text('School tiolet competition')
                   ],
                 ),
-                ElevatedButton(onPressed: () {}, child: Text('Evaluation')),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ChallengeDetails()));
+                  },
+                  child: Text('Evaluation'),
+                  style: ButtonStyle(
+                      elevation: MaterialStateProperty.resolveWith<double>(
+                          (states) => 0),
+                      shape: MaterialStateProperty.resolveWith<OutlinedBorder>(
+                          (states) => RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)))),
+                ),
               ],
             ),
           ),
@@ -148,7 +163,16 @@ class _EventsTab extends State<EventsTab> {
                     Text('School tiolet competition')
                   ],
                 ),
-                ElevatedButton(onPressed: () {}, child: Text('Ended')),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: Text('Ended'),
+                  style: ButtonStyle(
+                      elevation: MaterialStateProperty.resolveWith<double>(
+                          (states) => 0),
+                      shape: MaterialStateProperty.resolveWith<OutlinedBorder>(
+                          (states) => RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)))),
+                ),
               ],
             ),
           )
@@ -162,9 +186,9 @@ class _EventsTab extends State<EventsTab> {
       children: [
         _titleContainer('Other Updates'),
         Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height * .4,
           child: ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
               itemCount: 10,
               itemBuilder: (context, index) {
                 return _newsCard(

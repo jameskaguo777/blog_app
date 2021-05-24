@@ -86,14 +86,13 @@ class _MyVotes extends State<MyVotes> {
 
   Widget _votingButtonsPager() {
     return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.width*.3,
+      height: MediaQuery.of(context).size.height*.18,
       child: PageView(
-        scrollDirection: Axis.vertical,
-        controller: _votingButtonsPageContrtoller,
-        physics: new NeverScrollableScrollPhysics(),
-        children: <Widget>[_votingButtons(), _ratingSlider()],
-      ),
+          scrollDirection: Axis.vertical,
+          controller: _votingButtonsPageContrtoller,
+          physics: new NeverScrollableScrollPhysics(),
+          children: <Widget>[_votingButtons(), _ratingSlider()],
+        ),
     );
   }
 
@@ -185,31 +184,34 @@ class _MyVotes extends State<MyVotes> {
   }
 
   Widget _ratingSlider() {
-    return Column(
-      children: [
-        Text('Slide the slider to rate the picture in % higher the better.'),
-        Text('Current value $_currentSliderValue%'),
-        Slider(
-          value: _currentSliderValue,
-          min: 0,
-          max: 100,
-          divisions: 10,
-          label: _currentSliderValue.round().toString(),
-          onChanged: (double value) {
-            setState(() {
-              _currentSliderValue = value;
-            });
-          },
-        ),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: TextButton(onPressed: () {
-            _votingButtonsPageContrtoller.animateToPage(0,
-                    duration: Duration(milliseconds: 500),
-                    curve: Curves.easeOut);
-          }, child: Text('Submit')),
-        )
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          Text('Slide the slider to rate the picture in % higher the better.'),
+          Text('Current value $_currentSliderValue%'),
+          Slider(
+            value: _currentSliderValue,
+            min: 0,
+            max: 100,
+            divisions: 10,
+            label: _currentSliderValue.round().toString(),
+            onChanged: (double value) {
+              setState(() {
+                _currentSliderValue = value;
+              });
+            },
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: TextButton(onPressed: () {
+              _votingButtonsPageContrtoller.animateToPage(0,
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeOut);
+            }, child: Text('Submit')),
+          )
+        ],
+      ),
     );
   }
 
@@ -250,44 +252,45 @@ class _MyVotes extends State<MyVotes> {
                         OutlineInputBorder(borderSide: BorderSide(width: 2))),
               )),
           Container(
-            height: MediaQuery.of(context).size.height * 0.5,
             padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
             child: ListView.builder(
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return Container(
-                    padding: const EdgeInsets.all(5.0),
-                    decoration: BoxDecoration(
-                        border: Border(
-                            bottom:
-                                BorderSide(width: 2, color: Colors.grey[200]))),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Wrap(
-                          direction: Axis.vertical,
-                          alignment: WrapAlignment.start,
-                          crossAxisAlignment: WrapCrossAlignment.start,
-                          children: [
-                            Text(
-                              'Sinyo Mdau',
-                              style: Theme.of(context).textTheme.caption,
-                            ),
-                            Text(
-                              'Choo kichafu sana bado',
-                              style: Theme.of(context).textTheme.subtitle1,
-                            )
-                          ],
-                        ),
-                        Text(
-                          'April 25 2021',
-                          style: Theme.of(context).textTheme.overline,
-                        )
-                      ],
-                    ),
-                  );
-                }),
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                  itemCount: 10,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      padding: const EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+            border: Border(
+                bottom:
+                    BorderSide(width: 2, color: Colors.grey[200]))),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+            Wrap(
+              direction: Axis.vertical,
+              alignment: WrapAlignment.start,
+              crossAxisAlignment: WrapCrossAlignment.start,
+              children: [
+                Text(
+                  'Sinyo Mdau',
+                  style: Theme.of(context).textTheme.caption,
+                ),
+                Text(
+                  'Choo kichafu sana bado',
+                  style: Theme.of(context).textTheme.subtitle1,
+                )
+              ],
+            ),
+            Text(
+              'April 25 2021',
+              style: Theme.of(context).textTheme.overline,
+            )
+                        ],
+                      ),
+                    );
+                  }),
           )
         ],
       ),

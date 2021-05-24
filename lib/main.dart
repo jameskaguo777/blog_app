@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:v2/screens/home.dart';
+import 'package:v2/screens/login.dart';
 
 void main() {
   runApp(MyApp());
@@ -12,13 +13,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Swash Competition',
       theme: ThemeData(
+        scaffoldBackgroundColor: Colors.white,
         fontFamily: 'Noto Sans KR',
         primarySwatch: Colors.blue,
       ),
       // home: MyHomePage(title: 'Flutter Demo Home Page'),
-      initialRoute: '/',
+      initialRoute: '/login',
       routes: {
         '/': (context) => HomePage(),
+        '/login': (context) => Login(),
       },
     );
   }
