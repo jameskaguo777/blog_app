@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:get/get.dart';
+import 'package:v2/controllers/login_controller.dart';
+import 'package:v2/screens/home.dart';
+import 'package:v2/screens/signup.dart';
 
 class Login extends StatefulWidget {
   _Login createState() => _Login();
@@ -10,6 +14,9 @@ class _Login extends State<Login> {
   PageController _pageController =
       PageController(initialPage: 0, keepPage: true);
   bool _passwordVisible = false;
+  final loginController = Get.put(LoginController());
+  final _formState = GlobalKey<FormState>();
+  String email, password;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,7 +123,7 @@ class _Login extends State<Login> {
 
   Widget _loginFormPager() {
     return LimitedBox(
-      maxHeight: MediaQuery.of(context).size.height * .35,
+      maxHeight: MediaQuery.of(context).size.height * .5,
       child: PageView(
         scrollDirection: Axis.horizontal,
         controller: _pageController,
@@ -141,6 +148,7 @@ class _Login extends State<Login> {
           borderRadius: BorderRadius.circular(20),
           border: Border.all(width: 1, color: Colors.grey[100])),
       child: Form(
+        key: _formState,
         child: Column(
           children: [
             Padding(
@@ -156,6 +164,14 @@ class _Login extends State<Login> {
               child: TextFormField(
                 keyboardType: TextInputType.emailAddress,
                 keyboardAppearance: Brightness.dark,
+                validator: (value) {
+                  if (value.isBlank) {
+                    return 'Please enter email address';
+                  } else {
+                    email = value;
+                  }
+                  return null;
+                },
                 decoration: InputDecoration(
                     hintText: 'Enter email or Username',
                     labelText: 'Email/Username',
@@ -172,6 +188,14 @@ class _Login extends State<Login> {
                 obscureText: _passwordVisible,
                 keyboardType: TextInputType.visiblePassword,
                 keyboardAppearance: Brightness.dark,
+                validator: (value) {
+                  if (value.isBlank) {
+                    return 'Please enter password';
+                  } else {
+                    password = value;
+                  }
+                  return null;
+                },
                 decoration: InputDecoration(
                     hintText: 'Enter password',
                     labelText: 'Password',
@@ -202,18 +226,43 @@ class _Login extends State<Login> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  TextButton(onPressed: () {}, child: Text('Sign up')),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: Text('Login'),
-                    style: ButtonStyle(
-                        elevation: MaterialStateProperty.resolveWith<double>(
-                            (states) => 0),
-                        shape:
-                            MaterialStateProperty.resolveWith<OutlinedBorder>(
-                                (states) => RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20)))),
-                  )
+                  TextButton(onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp(initilaPage: 0)));
+                  }, child: Text('Sign up')),
+                  Obx(() {
+                    return ElevatedButton(
+                      onPressed: () {
+                        _loginButton();
+                        if (loginController.loginResponse.value ==
+                        'Login successful') {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => HomePage()));
+                    } else {
+                      var snackBar = SnackBar(
+                          content:
+                              Text('${loginController.loginResponse.value}'));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    }
+                      },
+                      child: loginController.isLoading.value
+                          ? Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                          )
+                          : Text('Login'),
+                      style: ButtonStyle(
+                          elevation: MaterialStateProperty.resolveWith<double>(
+                              (states) => 0),
+                          shape:
+                              MaterialStateProperty.resolveWith<OutlinedBorder>(
+                                  (states) => RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(20)))),
+                    );
+                    
+                  }),
                 ],
               ),
             ),
@@ -294,7 +343,9 @@ class _Login extends State<Login> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  TextButton(onPressed: () {}, child: Text('Sign up')),
+                  TextButton(onPressed: () {
+                    
+                  }, child: Text('Sign up')),
                   ElevatedButton(
                     onPressed: () {},
                     child: Text('Login'),
@@ -313,5 +364,11 @@ class _Login extends State<Login> {
         ),
       ),
     );
+  }
+
+  void _loginButton() {
+    if (_formState.currentState.validate()) {
+      loginController.postLogin(email, password);
+    }
   }
 }
