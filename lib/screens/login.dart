@@ -3,13 +3,14 @@ import 'package:lottie/lottie.dart';
 import 'package:get/get.dart';
 import 'package:v2/controllers/login_controller.dart';
 import 'package:v2/screens/home.dart';
+import 'package:v2/screens/school_home.dart';
 import 'package:v2/screens/signup.dart';
 
 class Login extends StatefulWidget {
   _Login createState() => _Login();
 }
 
-class _Login extends State<Login> {
+class _Login extends State<Login> with WidgetsBindingObserver {
   int _pagerIndex = 0;
   PageController _pageController =
       PageController(initialPage: 0, keepPage: true);
@@ -17,6 +18,26 @@ class _Login extends State<Login> {
   final loginController = Get.put(LoginController());
   final _formState = GlobalKey<FormState>();
   String email, password;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.paused:
+        break;
+      case AppLifecycleState.inactive:
+        loginController.clearValues();
+        print('App in active');
+        break;
+      case AppLifecycleState.resumed:
+        print(state.toString());
+        break;
+      case AppLifecycleState.detached:
+        print(state.toString());
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -226,31 +247,41 @@ class _Login extends State<Login> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  TextButton(onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp(initilaPage: 0)));
-                  }, child: Text('Sign up')),
-                  Obx(() {
-                    return ElevatedButton(
+                  TextButton(
                       onPressed: () {
-                        _loginButton();
-                        if (loginController.loginResponse.value ==
-                        'Login successful') {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SignUp(initilaPage: 0)));
+                      },
+                      child: Text('Sign up')),
+                  Obx(() {
+                    if (loginController.isSuccess.value) {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => HomePage()));
                     } else {
-                      var snackBar = SnackBar(
-                          content:
-                              Text('${loginController.loginResponse.value}'));
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      if (loginController.successRequest.value) {
+                        WidgetsBinding.instance
+                            .addPostFrameCallback((timeStamp) {
+                          var snackBar = SnackBar(
+                              content: Text(
+                                  '${loginController.loginResponse.value}'));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          loginController.clearValues();
+                        });
+                      }
                     }
+                    return ElevatedButton(
+                      onPressed: () {
+                        _loginButton("1");
                       },
                       child: loginController.isLoading.value
                           ? Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: CircularProgressIndicator(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CircularProgressIndicator(
                                 color: Colors.white,
                               ),
-                          )
+                            )
                           : Text('Login'),
                       style: ButtonStyle(
                           elevation: MaterialStateProperty.resolveWith<double>(
@@ -261,7 +292,6 @@ class _Login extends State<Login> {
                                       borderRadius:
                                           BorderRadius.circular(20)))),
                     );
-                    
                   }),
                 ],
               ),
@@ -282,6 +312,7 @@ class _Login extends State<Login> {
           borderRadius: BorderRadius.circular(20),
           border: Border.all(width: 1, color: Colors.grey[100])),
       child: Form(
+        key: _formState,
         child: Column(
           children: [
             Padding(
@@ -343,20 +374,52 @@ class _Login extends State<Login> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  TextButton(onPressed: () {
-                    
-                  }, child: Text('Sign up')),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: Text('Login'),
-                    style: ButtonStyle(
-                        elevation: MaterialStateProperty.resolveWith<double>(
-                            (states) => 0),
-                        shape:
-                            MaterialStateProperty.resolveWith<OutlinedBorder>(
-                                (states) => RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20)))),
-                  )
+                  TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SignUp(initilaPage: 1)));
+                      },
+                      child: Text('Sign up')),
+                  Obx(() {
+                    if (loginController.isSuccess.value) {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => SchoolHome()));
+                    } else {
+                      if (loginController.successRequest.value) {
+                        WidgetsBinding.instance
+                            .addPostFrameCallback((timeStamp) {
+                          var snackBar = SnackBar(
+                              content: Text(
+                                  '${loginController.loginResponse.value}'));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          loginController.clearValues();
+                        });
+                      }
+                    }
+                    return ElevatedButton(
+                      onPressed: () {
+                        _loginButton("2");
+                      },
+                      child: loginController.isLoading.value
+                          ? Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                            )
+                          : Text('Login'),
+                      style: ButtonStyle(
+                          elevation: MaterialStateProperty.resolveWith<double>(
+                              (states) => 0),
+                          shape:
+                              MaterialStateProperty.resolveWith<OutlinedBorder>(
+                                  (states) => RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(20)))),
+                    );
+                  }),
                 ],
               ),
             ),
@@ -366,9 +429,9 @@ class _Login extends State<Login> {
     );
   }
 
-  void _loginButton() {
+  void _loginButton(String userType) {
     if (_formState.currentState.validate()) {
-      loginController.postLogin(email, password);
+      loginController.postLogin(email, password, userType);
     }
   }
 }
