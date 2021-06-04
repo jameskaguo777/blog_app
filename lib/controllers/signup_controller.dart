@@ -30,9 +30,9 @@ class SignUpController extends GetxController {
       'email': email,
       'phone': phone,
       'password': password,
-      'address': address,
+      'location': address,
       'user_type': userType,
-      'player_id': 1
+      'player_id': '868756755786576yy'
     });
     final response = await http.post(Uri.parse(REGISTER_API), body: data);
     if (response.statusCode == 200) {

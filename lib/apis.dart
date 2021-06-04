@@ -1,4 +1,4 @@
-const String IMAGE_SOURCE_BASE_URL = 'http://www.swashcompetition.com/swash';
+const String IMAGE_SOURCE_BASE_URL = 'http://swash.mikonoyetu.or.tz';
 const String API_BASE_URL = IMAGE_SOURCE_BASE_URL + '/apis/';
 const String SIGN_IN_API = API_BASE_URL + 'signin.php';
 const String REGISTER_API = API_BASE_URL + 'register.php';
