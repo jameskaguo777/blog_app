@@ -18,10 +18,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       // home: MyHomePage(title: 'Flutter Demo Home Page'),
-      initialRoute: '/login',
+      initialRoute: '/',
       routes: {
-        '/': (context) => HomePage(),
-        '/login': (context) => Login(),
+        '/home': (context) => HomePage(),
+        '/': (context) => Login(),
       },
     );
   }
