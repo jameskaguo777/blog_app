@@ -37,10 +37,11 @@ class _SignUp extends State<SignUp> {
       physics: NeverScrollableScrollPhysics(),
       controller:
           PageController(keepPage: true, initialPage: widget.initilaPage),
-      children: <Widget>[PageStorage(bucket: _bucket,
-      child: _userSignUp()), PageStorage(bucket: _bucket,
-      child: _schoolSignUp()), PageStorage(bucket: _bucket,
-      child: _wardSignUp())],
+      children: <Widget>[
+        PageStorage(bucket: _bucket, child: _userSignUp()),
+        PageStorage(bucket: _bucket, child: _schoolSignUp()),
+        PageStorage(bucket: _bucket, child: _wardSignUp())
+      ],
     );
   }
 
@@ -288,6 +289,7 @@ class _SignUp extends State<SignUp> {
                                 '${_signupController.signUpResponse.value}'));
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       });
+                      // _signupController.clearValues();
                     }
 
                     return ElevatedButton(
@@ -557,7 +559,7 @@ class _SignUp extends State<SignUp> {
     );
   }
 
-  Widget _wardSignUpForm(){
+  Widget _wardSignUpForm() {
     return Container(
       width: MediaQuery.of(context).size.width,
       child: Form(

@@ -7,3 +7,31 @@ const Map<String, dynamic> CHALLECHES = {
     'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Australian_Toilet.JPG/1200px-Australian_Toilet.JPG'
   ]
 };
+
+const List<Map<String, String>> COMMENTSLIISTS = [
+   {
+     'name': 'George',
+     'comment': 'Usafi muhimu',
+     'date': 'May 12 2021'
+   },
+   {
+     'name': 'Juma',
+     'comment': 'safi sana',
+     'date': 'May 13 2021'
+   },
+   {
+     'name': 'Mwajuma',
+     'comment': 'Choo bado hiko',
+     'date': 'May 15 2021'
+   },
+   {
+     'name': 'Neema',
+     'comment': 'Amejitahidi',
+     'date': 'May 19 2021'
+   },
+   {
+     'name': 'Ali',
+     'comment': 'tukomae',
+     'date': 'May 22 2021'
+   }
+];

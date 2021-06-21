@@ -26,13 +26,14 @@ class SignUpController extends GetxController {
       String address, String userType) async {
     isLoading.value = true;
     String data = jsonEncode({
-      'fullname': fullName,
+      'full_name': fullName,
       'email': email,
       'phone': phone,
       'password': password,
       'location': address,
       'user_type': userType,
-      'player_id': '868756755786576yy'
+      'player_id': '868756755786576yy',
+      'school_id': 1
     });
     final response = await http.post(Uri.parse(REGISTER_API), body: data);
     if (response.statusCode == 200) {

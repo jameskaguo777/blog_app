@@ -254,9 +254,10 @@ class _MyVotes extends State<MyVotes> {
           Container(
             padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
             child: ListView.builder(
+              
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                  itemCount: 10,
+                  itemCount: COMMENTSLIISTS.length,
                   itemBuilder: (context, index) {
                     return Container(
                       padding: const EdgeInsets.all(5.0),
@@ -274,17 +275,17 @@ class _MyVotes extends State<MyVotes> {
               crossAxisAlignment: WrapCrossAlignment.start,
               children: [
                 Text(
-                  'Sinyo Mdau',
+                  COMMENTSLIISTS[index]['name'],
                   style: Theme.of(context).textTheme.caption,
                 ),
                 Text(
-                  'Choo kichafu sana bado',
+                  COMMENTSLIISTS[index]['comment'],
                   style: Theme.of(context).textTheme.subtitle1,
                 )
               ],
             ),
             Text(
-              'April 25 2021',
+              COMMENTSLIISTS[index]['date'],
               style: Theme.of(context).textTheme.overline,
             )
                         ],
