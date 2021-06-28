@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:v2/controllers/user_controller.dart';
 import 'package:v2/drawer/drawer_widget.dart';
 import 'package:v2/tabs/events.dart';
 import 'package:v2/tabs/league_table.dart';
@@ -10,6 +12,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePage extends State<HomePage> {
+  final _userController = Get.put(UserController());
+  @override
+  void initState() {
+    super.initState();
+    _userController.userDetails();
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -21,7 +30,8 @@ class _HomePage extends State<HomePage> {
           bottom: TabBar(
             automaticIndicatorColorAdjustment: true,
             indicatorSize: TabBarIndicatorSize.tab,
-            labelStyle: TextStyle(fontWeight: FontWeight.w500, decoration: TextDecoration.none),
+            labelStyle: TextStyle(
+                fontWeight: FontWeight.w500, decoration: TextDecoration.none),
             tabs: [
               Tab(
                 child: Text('MY VOTES'),

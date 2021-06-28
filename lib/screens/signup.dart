@@ -12,7 +12,7 @@ class SignUp extends StatefulWidget {
 
 class _SignUp extends State<SignUp> {
   final _formState = GlobalKey<FormState>();
-  String fullName, phone, email, locationAddress, password, schoolName;
+  String fullName, phone, email, activationCode, password, schoolName;
   bool _passwordVisible = true;
   final _signupController = Get.put(SignUpController());
   final PageStorageBucket _bucket = PageStorageBucket();
@@ -156,36 +156,13 @@ class _SignUp extends State<SignUp> {
                   if (value.isBlank) {
                     return 'Please enter phone number';
                   } else {
-                    email = value;
+                    phone = value;
                   }
                   return null;
                 },
                 decoration: InputDecoration(
                     hintText: 'Enter phone number',
                     labelText: 'Phone Number',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(
-                          style: BorderStyle.solid,
-                        ))),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10, 8.0, 10, 8.0),
-              child: TextFormField(
-                keyboardType: TextInputType.streetAddress,
-                keyboardAppearance: Brightness.dark,
-                validator: (value) {
-                  if (value.isBlank) {
-                    return 'Please enter your location address';
-                  } else {
-                    email = value;
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                    hintText: 'Enter your location address',
-                    labelText: 'Adddress',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(
@@ -279,16 +256,22 @@ class _SignUp extends State<SignUp> {
                   TextButton(onPressed: () {}, child: Text('Login')),
                   Obx(() {
                     if (_signupController.isSuccess.value) {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => HomePage()));
-                    }
-                    if (_signupController.successRequest.value) {
                       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                        var snackBar = SnackBar(
-                            content: Text(
-                                '${_signupController.signUpResponse.value}'));
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomePage()));
                       });
+                    } else {
+                      if (_signupController.successRequest.value) {
+                        WidgetsBinding.instance
+                            .addPostFrameCallback((timeStamp) {
+                          var snackBar = SnackBar(
+                              content: Text(
+                                  '${_signupController.signUpResponse.value}'));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        });
+                      }
                       // _signupController.clearValues();
                     }
 
@@ -410,19 +393,19 @@ class _SignUp extends State<SignUp> {
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 8.0, 10, 8.0),
               child: TextFormField(
-                keyboardType: TextInputType.streetAddress,
+                keyboardType: TextInputType.text,
                 keyboardAppearance: Brightness.dark,
                 validator: (value) {
                   if (value.isBlank) {
-                    return 'Please enter school location address';
+                    return 'Please enter your activation code';
                   } else {
-                    email = value;
+                    activationCode = value;
                   }
                   return null;
                 },
                 decoration: InputDecoration(
-                    hintText: 'Enter school location address',
-                    labelText: 'Adddress',
+                    hintText: 'Enter your activation code',
+                    labelText: 'Activation Code',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(
@@ -646,18 +629,18 @@ class _SignUp extends State<SignUp> {
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 8.0, 10, 8.0),
               child: TextFormField(
-                keyboardType: TextInputType.streetAddress,
+                keyboardType: TextInputType.text,
                 keyboardAppearance: Brightness.dark,
                 validator: (value) {
                   if (value.isBlank) {
-                    return 'Please enter ward location address';
+                    return 'Please enter your activation code';
                   } else {
-                    email = value;
+                    activationCode = value;
                   }
                   return null;
                 },
                 decoration: InputDecoration(
-                    hintText: 'Enter ward location address',
+                    hintText: 'Enter your location address',
                     labelText: 'Adddress',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
@@ -766,7 +749,7 @@ class _SignUp extends State<SignUp> {
                     }
                     return ElevatedButton(
                       onPressed: () {
-                        _schoolSignupButton();
+                        _wardSignupButton();
                       },
                       child: _signupController.isLoading.value
                           ? Padding(
@@ -797,15 +780,21 @@ class _SignUp extends State<SignUp> {
 
   void _userSignupButton() {
     if (_formState.currentState.validate()) {
-      _signupController.signUp(
-          fullName, email, phone, password, locationAddress, "1");
+      _signupController.signUp(fullName, email, phone, password, "user");
     }
   }
 
   void _schoolSignupButton() {
     if (_formState.currentState.validate()) {
-      _signupController.signUp(
-          schoolName, email, phone, password, locationAddress, "2");
+      _signupController.signUp(schoolName, email, phone, password, 'school',
+          activationCode: activationCode);
+    } else {}
+  }
+
+  void _wardSignupButton() {
+    if (_formState.currentState.validate()) {
+      _signupController.signUp(schoolName, email, phone, password, 'ward',
+          activationCode: activationCode);
     } else {}
   }
 }

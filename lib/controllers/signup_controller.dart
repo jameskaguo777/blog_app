@@ -3,6 +3,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:v2/apis.dart';
+import 'package:v2/constants/new_api.dart';
+import 'package:v2/tools/device_info.dart';
 
 class SignUpController extends GetxController {
   var isLoading = false.obs;
@@ -22,29 +24,34 @@ class SignUpController extends GetxController {
     signUpResponse.value = '';
   }
 
-  void signUp(String fullName, String email, String phone, String password,
-      String address, String userType) async {
+  void signUp(String fullName, String email, String phone, String password, String userType,
+      {String activationCode='null'}) async {
+        String deviceName = await DeviceInfo().getDeviceInfo();
     isLoading.value = true;
     String data = jsonEncode({
-      'full_name': fullName,
+      'name': fullName,
       'email': email,
       'phone': phone,
       'password': password,
-      'location': address,
-      'user_type': userType,
-      'player_id': '868756755786576yy',
-      'school_id': 1
+      'activation_code': activationCode,
+      'type': userType,
+      'device_name': deviceName
     });
-    final response = await http.post(Uri.parse(REGISTER_API), body: data);
+    final response = await http.post(Uri.parse(REGISTER), body: data, headers: {
+      'Content-Type': 'application/json',
+    });
+    print(response.body);
     if (response.statusCode == 200) {
       var res = jsonDecode(response.body);
-      signUpResponse.value = res['message'];
-      isSuccess.value = res['success'];
+      print(res);
+      
+      isSuccess.value = res['message']['success'];
       successRequest.value = true;
-      if (res['success']) {
-        box.write('email', email);
-        box.write('password', password);
+      if (isSuccess.value) {
+        box.write('access_token', res['access_token']);
         successRequest.value = true;
+      } else{
+        signUpResponse.value = res['message']['message'];
       }
       isLoading.value = false;
     }

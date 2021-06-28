@@ -7,10 +7,12 @@ class LeagueTable extends StatefulWidget {
 class _LeagueTable extends State<LeagueTable> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      child: Column(
-        children: [_leagues(context)],
+    return SingleChildScrollView(
+          child: Container(
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          children: [_leagues(context)],
+        ),
       ),
     );
   }
@@ -74,6 +76,12 @@ class _LeagueTable extends State<LeagueTable> {
                           ),
                           DataColumn(
                             label: Text(
+                              'Built Year',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
                               'Score %',
                               style: TextStyle(fontStyle: FontStyle.italic),
                             ),
@@ -84,6 +92,7 @@ class _LeagueTable extends State<LeagueTable> {
                             cells: <DataCell>[
                               DataCell(Text('1'),),
                               DataCell(Text('Mwajuma School')),
+                              DataCell(Text('1934')),
                               DataCell(Text('69')),
                             ],
                           ),
@@ -91,6 +100,7 @@ class _LeagueTable extends State<LeagueTable> {
                             cells: <DataCell>[
                               DataCell(Text('2')),
                               DataCell(Text('Maendeleo ni Lazima School')),
+                              DataCell(Text('1994')),
                               DataCell(Text('63')),
                             ],
                           ),
@@ -98,6 +108,7 @@ class _LeagueTable extends State<LeagueTable> {
                             cells: <DataCell>[
                               DataCell(Text('3')),
                               DataCell(Text('Mnasemaje School')),
+                              DataCell(Text('1984')),
                               DataCell(Text('53')),
                             ],
                           ),

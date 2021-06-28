@@ -32,6 +32,8 @@ dependencies:
   get: ^4.1.4
   http:
   get_storage:
+  device_info: ^2.0.2
+  animated_text_kit: ^4.2.1
 
 dev_dependencies:
   flutter_test:

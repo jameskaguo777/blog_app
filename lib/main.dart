@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:v2/screens/home.dart';
 import 'package:v2/screens/login.dart';
+import 'package:v2/screens/splash_screen.dart';
 
-void main() {
+void main() async {
+  await GetStorage.init();
   runApp(MyApp());
 }
 
@@ -21,7 +24,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/home': (context) => HomePage(),
-        '/': (context) => Login(),
+        '/': (context) => SplashScreen(),
+        '/login': (context) => Login()
       },
     );
   }

@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:v2/controllers/user_controller.dart';
+import 'package:v2/screens/login.dart';
 
 class DrawerWidgetT extends StatelessWidget {
+  GetStorage box = GetStorage();
+  UserController _userController = Get.find();
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -9,22 +15,31 @@ class DrawerWidgetT extends StatelessWidget {
       child: ListView(
         children: [
           DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.blue
-            ),
-            child: Column(
-            children: [
-              Row(
-                 crossAxisAlignment: CrossAxisAlignment.center,
-                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              decoration: BoxDecoration(color: Colors.blue),
+              child: Column(
                 children: [
-                CircleAvatar(
-                  child: Icon(Icons.person),
-                ), 
-                Text('Sinyo Developer', style: TextStyle(color: Colors.white),),
-              ],)
-            ],
-          )),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      CircleAvatar(
+                        child: Icon(Icons.person),
+                      ),
+                      Obx(() {
+                        return Text(
+                          _userController.name.value,
+                          style: TextStyle(color: Colors.white),
+                        );
+                      }),
+                    ],
+                  )
+                ],
+              )),
+          ListTile(
+            onTap: () => print('pressed'),
+            title: Text('Health Emergency'),
+            hoverColor: Colors.cyan,
+          ),
           ListTile(
             onTap: () => print('pressed'),
             title: Text('Privacy Policy'),
@@ -46,7 +61,13 @@ class DrawerWidgetT extends StatelessWidget {
             hoverColor: Colors.cyan,
           ),
           ListTile(
-            onTap: () => print('pressed'),
+            onTap: () {
+              box.write('access_token', 'null');
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (context) => Login()));
+              });
+            },
             title: Text('Logout'),
             hoverColor: Colors.cyan,
           ),

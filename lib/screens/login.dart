@@ -231,7 +231,7 @@ class _Login extends State<Login> with WidgetsBindingObserver {
                 },
                 decoration: InputDecoration(
                     hintText: 'Enter email or Username',
-                    labelText: 'Email/Username',
+                    labelText: 'Email/Phone',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(
@@ -293,24 +293,27 @@ class _Login extends State<Login> with WidgetsBindingObserver {
                       child: Text('Sign up')),
                   Obx(() {
                     if (loginController.isSuccess.value) {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => HomePage()));
+                      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomePage()));
+                      });
                     } else {
-                      
-                      // if (loginController.successRequest.value) {
-                      //   WidgetsBinding.instance
-                      //       .addPostFrameCallback((timeStamp) {
-                      //     var snackBar = SnackBar(
-                      //         content: Text(
-                      //             '${loginController.loginResponse.value}'));
-                      //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      //     loginController.clearValues();
-                      //   });
-                      // }
+                      if (loginController.successRequest.value) {
+                        WidgetsBinding.instance
+                            .addPostFrameCallback((timeStamp) {
+                          var snackBar = SnackBar(
+                              content: Text(
+                                  '${loginController.loginResponse.value}'));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          loginController.clearValues();
+                        });
+                      }
                     }
                     return ElevatedButton(
                       onPressed: () {
-                        _loginButton("1");
+                        _loginButton("user");
                       },
                       child: loginController.isLoading.value
                           ? Padding(
@@ -367,7 +370,7 @@ class _Login extends State<Login> with WidgetsBindingObserver {
                 keyboardAppearance: Brightness.dark,
                 decoration: InputDecoration(
                     hintText: 'Enter email or School name',
-                    labelText: 'Email/School name',
+                    labelText: 'Email/phone',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(
@@ -496,7 +499,7 @@ class _Login extends State<Login> with WidgetsBindingObserver {
                 keyboardAppearance: Brightness.dark,
                 decoration: InputDecoration(
                     hintText: 'Enter email or ward name',
-                    labelText: 'Email/Ward name',
+                    labelText: 'Email/phone',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(
@@ -600,10 +603,6 @@ class _Login extends State<Login> with WidgetsBindingObserver {
   void _loginButton(String userType) {
     if (_userFormState.currentState.validate()) {
       loginController.postLogin(email, password, userType);
-      Future.delayed(Duration(seconds: 10), () {
-                        Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => HomePage()));
-                      });
     }
   }
 }
