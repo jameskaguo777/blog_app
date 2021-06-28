@@ -6,6 +6,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:v2/apis.dart';
 import 'package:v2/constants/new_api.dart';
+import 'package:v2/controllers/check_token_controller.dart';
 import 'package:v2/tools/device_info.dart';
 
 class LoginController extends GetxController {
@@ -14,6 +15,7 @@ class LoginController extends GetxController {
   var isSuccess = false.obs;
   var successRequest = false.obs;
   GetStorage box = GetStorage();
+  CheckTokenController _checkTokenController = Get.find();
   @override
   void onInit() {
     super.onInit();
@@ -40,9 +42,11 @@ class LoginController extends GetxController {
       if (isSuccess.value) {
         print('is success value ${isSuccess.value}');
         loginResponse.value = res['message']['message'];
-        box.write('token', res['access_token']);
+        await box.write('token', res['access_token']);
+        await box.write('test', 'tumelewa');
         // box.write('role_id', res['role_id']);
         print('token ${res['access_token']}');
+        _checkTokenController.getTokenF();
       } else {
         loginResponse.value = res['message']['message'];
       }

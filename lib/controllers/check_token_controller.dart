@@ -10,4 +10,8 @@ class CheckTokenController extends GetxController {
     super.onInit();
     token.value = box.read('access_token');
   }
+
+  void getTokenF() {
+    token.value = box.read('access_token');
+  }
 }

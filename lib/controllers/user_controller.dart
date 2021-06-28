@@ -18,6 +18,7 @@ class UserController extends GetxController {
   void onInit() {
     super.onInit();
     token = _checkTokenController.token.value;
+    
   }
 
   void userDetails() async {
