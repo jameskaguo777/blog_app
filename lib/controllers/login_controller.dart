@@ -42,11 +42,11 @@ class LoginController extends GetxController {
       if (isSuccess.value) {
         print('is success value ${isSuccess.value}');
         loginResponse.value = res['message']['message'];
-        await box.write('token', res['access_token']);
+        await box.write('access_token', res['access_token']);
         await box.write('test', 'tumelewa');
         // box.write('role_id', res['role_id']);
         print('token ${res['access_token']}');
-        _checkTokenController.getTokenF();
+        // _checkTokenController.getTokenF();
       } else {
         loginResponse.value = res['message']['message'];
       }

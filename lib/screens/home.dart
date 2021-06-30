@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:v2/controllers/user_controller.dart';
 import 'package:v2/drawer/drawer_widget.dart';
 import 'package:v2/tabs/events.dart';
@@ -17,6 +18,9 @@ class _HomePage extends State<HomePage> {
   void initState() {
     super.initState();
     _userController.userDetails();
+
+    GetStorage().listenKey(
+        'access_token', (value) => print('from listen token $value'));
   }
 
   @override

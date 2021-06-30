@@ -49,7 +49,7 @@ class _SplashScreen extends State<SplashScreen> {
       print('splashscreen ${_getTokenController.token}');
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         Future.delayed(Duration(seconds: 4), () {
-          Navigator.push(
+          Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => HomePage()));
         });
       });

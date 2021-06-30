@@ -30,7 +30,7 @@ class UserController extends GetxController {
     print(response.body);
     var body = jsonDecode(response.body);
     if (response.statusCode == 200) {
-      name.value = body['name'];
+      name.value = body['data']['name'];
     }
     print(response.body);
   }

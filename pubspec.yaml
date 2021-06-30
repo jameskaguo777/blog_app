@@ -31,7 +31,7 @@ dependencies:
   lottie: ^1.0.1
   get: ^4.1.4
   http:
-  get_storage:
+  get_storage: ^2.0.2
   device_info: ^2.0.2
   animated_text_kit: ^4.2.1
 
