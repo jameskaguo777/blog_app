@@ -4,3 +4,6 @@ const String REGISTER = API_BASE_URL + 'register';
 const String LOGIN = API_BASE_URL + 'login';
 const String USER = API_BASE_URL + 'user';
 const String ACTIVE_COMPETITION = API_BASE_URL + 'active/competition';
+const String AUTHORIZED = API_BASE_URL + 'authorized';
+const String GET_COMPETITION_PARTICIPANTS_A = API_BASE_URL + 'participants';
+const String VOTE = API_BASE_URL + 'vote';

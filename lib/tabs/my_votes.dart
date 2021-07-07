@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:v2/constants/demo_data.dart';
+import 'package:v2/controllers/my_votes_controller.dart';
 
 class MyVotes extends StatefulWidget {
   _MyVotes createState() => _MyVotes();
@@ -11,17 +14,21 @@ class _MyVotes extends State<MyVotes> {
   PageController _votingButtonsPageContrtoller = PageController(initialPage: 0);
   int pictureSliverPageViewIndex = 0;
   double _currentSliderValue = 20;
+  final _myVotesController = Get.put(MyVotesController());
   final _formState = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.all(8.0),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [_voting(context), _comments()],
-        ),
-      ),
+      child: SingleChildScrollView(child: Obx(() {
+        if (_myVotesController.isLoading.value) {
+          return Column(
+            children: [_voting(context), _comments()],
+          );
+        }
+        return CircularProgressIndicator();
+      })),
     );
   }
 
@@ -86,13 +93,13 @@ class _MyVotes extends State<MyVotes> {
 
   Widget _votingButtonsPager() {
     return Container(
-      height: MediaQuery.of(context).size.height*.18,
+      height: MediaQuery.of(context).size.height * .18,
       child: PageView(
-          scrollDirection: Axis.vertical,
-          controller: _votingButtonsPageContrtoller,
-          physics: new NeverScrollableScrollPhysics(),
-          children: <Widget>[_votingButtons(), _ratingSlider()],
-        ),
+        scrollDirection: Axis.vertical,
+        controller: _votingButtonsPageContrtoller,
+        physics: new NeverScrollableScrollPhysics(),
+        children: <Widget>[_votingButtons(), _ratingSlider()],
+      ),
     );
   }
 
@@ -204,11 +211,13 @@ class _MyVotes extends State<MyVotes> {
           ),
           Align(
             alignment: Alignment.bottomRight,
-            child: TextButton(onPressed: () {
-              _votingButtonsPageContrtoller.animateToPage(0,
+            child: TextButton(
+                onPressed: () {
+                  _votingButtonsPageContrtoller.animateToPage(0,
                       duration: Duration(milliseconds: 500),
                       curve: Curves.easeOut);
-            }, child: Text('Submit')),
+                },
+                child: Text('Submit')),
           )
         ],
       ),
@@ -254,44 +263,43 @@ class _MyVotes extends State<MyVotes> {
           Container(
             padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
             child: ListView.builder(
-              
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                  itemCount: COMMENTSLIISTS.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      padding: const EdgeInsets.all(5.0),
-                      decoration: BoxDecoration(
-            border: Border(
-                bottom:
-                    BorderSide(width: 2, color: Colors.grey[200]))),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-            Wrap(
-              direction: Axis.vertical,
-              alignment: WrapAlignment.start,
-              crossAxisAlignment: WrapCrossAlignment.start,
-              children: [
-                Text(
-                  COMMENTSLIISTS[index]['name'],
-                  style: Theme.of(context).textTheme.caption,
-                ),
-                Text(
-                  COMMENTSLIISTS[index]['comment'],
-                  style: Theme.of(context).textTheme.subtitle1,
-                )
-              ],
-            ),
-            Text(
-              COMMENTSLIISTS[index]['date'],
-              style: Theme.of(context).textTheme.overline,
-            )
-                        ],
-                      ),
-                    );
-                  }),
+                itemCount: COMMENTSLIISTS.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    padding: const EdgeInsets.all(5.0),
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom:
+                                BorderSide(width: 2, color: Colors.grey[200]))),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Wrap(
+                          direction: Axis.vertical,
+                          alignment: WrapAlignment.start,
+                          crossAxisAlignment: WrapCrossAlignment.start,
+                          children: [
+                            Text(
+                              COMMENTSLIISTS[index]['name'],
+                              style: Theme.of(context).textTheme.caption,
+                            ),
+                            Text(
+                              COMMENTSLIISTS[index]['comment'],
+                              style: Theme.of(context).textTheme.subtitle1,
+                            )
+                          ],
+                        ),
+                        Text(
+                          COMMENTSLIISTS[index]['date'],
+                          style: Theme.of(context).textTheme.overline,
+                        )
+                      ],
+                    ),
+                  );
+                }),
           )
         ],
       ),
