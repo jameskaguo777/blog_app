@@ -48,4 +48,21 @@ class MyVotesController extends GetxController {
         },
         body: data);
   }
+
+  void comment(int competitionParticipantID, String comment) async {
+    String data = jsonEncode({
+      'competition_participant_id': competitionParticipantID,
+      'comment': comment
+    });
+    final response = await http.post(Uri.parse(COMMENT),
+        headers: {
+          HttpHeaders.authorizationHeader: 'Bearer $token',
+          'Content-Type': 'application/json'
+        },
+        body: data);
+    if (response.statusCode == 200) {
+      var body = jsonDecode(response.body);
+      isSuccessful.value = body['message']['success'];
+    }
+  }
 }

@@ -31,7 +31,6 @@ class _SplashScreen extends State<SplashScreen> {
       if (_authonticationController.isLoading.value) {
         print('nimepita ${_authonticationController.isAuthorized.value}');
         if (_authonticationController.isAuthorized.value) {
-          print('target');
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
             Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (context) => HomePage()));

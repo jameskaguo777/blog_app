@@ -7,3 +7,4 @@ const String ACTIVE_COMPETITION = API_BASE_URL + 'active/competition';
 const String AUTHORIZED = API_BASE_URL + 'authorized';
 const String GET_COMPETITION_PARTICIPANTS_A = API_BASE_URL + 'participants';
 const String VOTE = API_BASE_URL + 'vote';
+const String COMMENT = API_BASE_URL + 'comment';
