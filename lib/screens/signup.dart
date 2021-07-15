@@ -12,7 +12,7 @@ class SignUp extends StatefulWidget {
 
 class _SignUp extends State<SignUp> {
   final _formState = GlobalKey<FormState>();
-  String fullName, phone, email, activationCode, password, schoolName;
+  String fullName, phone, email, activationCode, password, schoolName, address;
   bool _passwordVisible = true;
   final _signupController = Get.put(SignUpController());
   final PageStorageBucket _bucket = PageStorageBucket();
@@ -163,6 +163,29 @@ class _SignUp extends State<SignUp> {
                 decoration: InputDecoration(
                     hintText: 'Enter phone number',
                     labelText: 'Phone Number',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: BorderSide(
+                          style: BorderStyle.solid,
+                        ))),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 8.0, 10, 8.0),
+              child: TextFormField(
+                keyboardType: TextInputType.streetAddress,
+                keyboardAppearance: Brightness.dark,
+                validator: (value) {
+                  if (value.isBlank) {
+                    return 'Please enter your location address';
+                  } else {
+                    address = value;
+                  }
+                  return null;
+                },
+                decoration: InputDecoration(
+                    hintText: 'Enter address',
+                    labelText: 'Address',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(
@@ -393,19 +416,19 @@ class _SignUp extends State<SignUp> {
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 8.0, 10, 8.0),
               child: TextFormField(
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.streetAddress,
                 keyboardAppearance: Brightness.dark,
                 validator: (value) {
                   if (value.isBlank) {
-                    return 'Please enter your activation code';
+                    return 'Please enter your location address';
                   } else {
-                    activationCode = value;
+                    address = value;
                   }
                   return null;
                 },
                 decoration: InputDecoration(
-                    hintText: 'Enter your activation code',
-                    labelText: 'Activation Code',
+                    hintText: 'Enter address',
+                    labelText: 'Address',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(
@@ -629,19 +652,19 @@ class _SignUp extends State<SignUp> {
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 8.0, 10, 8.0),
               child: TextFormField(
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.streetAddress,
                 keyboardAppearance: Brightness.dark,
                 validator: (value) {
                   if (value.isBlank) {
-                    return 'Please enter your activation code';
+                    return 'Please enter your location address';
                   } else {
-                    activationCode = value;
+                    address = value;
                   }
                   return null;
                 },
                 decoration: InputDecoration(
-                    hintText: 'Enter your location address',
-                    labelText: 'Adddress',
+                    hintText: 'Enter address',
+                    labelText: 'Address',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(

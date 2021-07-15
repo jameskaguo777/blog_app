@@ -6,7 +6,7 @@ import 'package:v2/screens/login.dart';
 
 class DrawerWidgetT extends StatelessWidget {
   GetStorage box = GetStorage();
-  UserController _userController = Get.find();
+  // UserController _userController = Get.find();
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -27,7 +27,7 @@ class DrawerWidgetT extends StatelessWidget {
                       ),
                       Obx(() {
                         return Text(
-                          _userController.name.value,
+                          'Not Set',
                           style: TextStyle(color: Colors.white),
                         );
                       }),

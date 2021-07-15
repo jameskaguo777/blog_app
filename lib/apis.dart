@@ -1,4 +1,4 @@
-const String IMAGE_SOURCE_BASE_URL = 'http://swash.mikonoyetu.or.tz';
+const String IMAGE_SOURCE_BASE_URL = 'http://trueapps.org/swash';
 const String API_BASE_URL = IMAGE_SOURCE_BASE_URL + '/apis/';
 const String SIGN_IN_API = API_BASE_URL + 'signin.php';
 const String REGISTER_API = API_BASE_URL + 'register.php';
@@ -23,3 +23,8 @@ const String GET_POSTS = API_BASE_URL + 'get_posts.php';
 const String CHECK_ACTIVE_COMPETITIONS =
     API_BASE_URL + 'check_active_competition.php';
 const String POST_COMMENT_API = API_BASE_URL + 'post_coment.php';
+
+const int USER_TYPE_WARD = 4;
+const int USER_TYPE_VOTER = 3;
+const int USER_TYPE_TEACHER = 2;
+const int USER_TYPE_ADMIN = 1;

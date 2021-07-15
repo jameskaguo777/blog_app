@@ -15,7 +15,7 @@ class _MyVotes extends State<MyVotes> {
   var pictureSliverPageViewIndex = 1.obs;
   var _currentSliderValue = 20.0.obs;
   var commentText = ''.obs;
-  final _myVotesController = Get.put(MyVotesController());
+  // final _myVotesController = Get.put(MyVotesController());
   final _formState = GlobalKey<FormState>();
   Widget myVotesWidget;
 
@@ -33,16 +33,16 @@ class _MyVotes extends State<MyVotes> {
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.all(8.0),
       child: SingleChildScrollView(child: Obx(() {
-        _myVotesController.isSuccessful.value
-            ? _myVotesController.getParticipant()
-            : null;
-        if (!_myVotesController.isLoading.value) {
-          print('ddata size ${_myVotesController.data.length}');
+        // _myVotesController.isSuccessful.value
+        //     ? _myVotesController.getParticipant()
+        //     : null;
+        
+          // print('ddata size ${_myVotesController.data.length}');
           return Column(
             children: [_voting(context), _comments()],
           );
-        }
-        return Center(child: CircularProgressIndicator());
+        
+        // return Center(child: CircularProgressIndicator());
       })),
     );
   }
@@ -59,9 +59,7 @@ class _MyVotes extends State<MyVotes> {
               width: double.infinity,
               margin: const EdgeInsets.fromLTRB(0, 8.0, 0, 8.0),
               padding: const EdgeInsets.all(8.0),
-              child: Text(
-                  _myVotesController.data[pictureSliverPageViewIndex.value]
-                      ['competition']['theme']),
+              child: Text(''),
               color: Colors.white,
             ),
             _pictureSlider(context)
@@ -77,7 +75,7 @@ class _MyVotes extends State<MyVotes> {
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.width,
             child: PageView.builder(
-                itemCount: _myVotesController.data.length,
+                itemCount: 2,
                 pageSnapping: true,
                 physics: new NeverScrollableScrollPhysics(),
                 onPageChanged: (i) => pictureSliverPageViewIndex.value = i,
@@ -86,8 +84,7 @@ class _MyVotes extends State<MyVotes> {
                 itemBuilder:
                     (BuildContext context, pictureSliverPageViewIndex) {
                   return Image.network(
-                    _myVotesController.data[pictureSliverPageViewIndex]
-                        ['media_urls'][0],
+                    '',
                     loadingBuilder: (context, widget, events) {
                       return events == null
                           ? widget
@@ -127,15 +124,15 @@ class _MyVotes extends State<MyVotes> {
         children: [
           ElevatedButton(
             onPressed: () {
-              if (_myVotesController.data.length - 1 >=
-                      pictureSliverPageViewIndex.value &&
-                  pictureSliverPageViewIndex.value != 1) {
-                pictureSliverPageViewIndex.value--;
-                _pictureSliderPageController.animateToPage(
-                    pictureSliverPageViewIndex.value,
-                    duration: Duration(microseconds: 2000),
-                    curve: Curves.easeIn);
-              }
+              // if (_myVotesController.data.length - 1 >=
+              //         pictureSliverPageViewIndex.value &&
+              //     pictureSliverPageViewIndex.value != 1) {
+              //   pictureSliverPageViewIndex.value--;
+              //   _pictureSliderPageController.animateToPage(
+              //       pictureSliverPageViewIndex.value,
+              //       duration: Duration(microseconds: 2000),
+              //       curve: Curves.easeIn);
+              // }
             },
             style: ButtonStyle(
                 elevation:
@@ -179,18 +176,18 @@ class _MyVotes extends State<MyVotes> {
               )),
           ElevatedButton(
             onPressed: () {
-              print('picture index ${pictureSliverPageViewIndex.value}');
-              if (_myVotesController.data.length - 1 >
-                  pictureSliverPageViewIndex.value) {
-                pictureSliverPageViewIndex.value++;
-                _pictureSliderPageController.animateToPage(
-                    pictureSliverPageViewIndex.value,
-                    duration: Duration(microseconds: 2000),
-                    curve: Curves.easeIn);
-                // print(pictureSliverPageViewIndex);
-              } else {
-                // print(pictureSliverPageViewIndex);
-              }
+              // print('picture index ${pictureSliverPageViewIndex.value}');
+              // if (_myVotesController.data.length - 1 >
+              //     pictureSliverPageViewIndex.value) {
+              //   pictureSliverPageViewIndex.value++;
+              //   _pictureSliderPageController.animateToPage(
+              //       pictureSliverPageViewIndex.value,
+              //       duration: Duration(microseconds: 2000),
+              //       curve: Curves.easeIn);
+              //   // print(pictureSliverPageViewIndex);
+              // } else {
+              //   // print(pictureSliverPageViewIndex);
+              // }
             },
             style: ButtonStyle(
                 elevation:
@@ -275,10 +272,10 @@ class _MyVotes extends State<MyVotes> {
                     suffixIcon: InkWell(
                       onTap: () {
                         if (_formState.currentState.validate()) {
-                          _myVotesController.comment(
-                              _myVotesController.data[
-                                  pictureSliverPageViewIndex.value - 1]['id'],
-                              commentText.value);
+                          // _myVotesController.comment(
+                          //     _myVotesController.data[
+                          //         pictureSliverPageViewIndex.value - 1]['id'],
+                          //     commentText.value);
                           _formState.currentState.reset();
                         }
                       },
@@ -290,18 +287,13 @@ class _MyVotes extends State<MyVotes> {
                     border:
                         OutlineInputBorder(borderSide: BorderSide(width: 2))),
               )),
-          _myVotesController
-                      .data[pictureSliverPageViewIndex.value - 1]['comment']
-                      .length !=
-                  0
+          false
               ? Container(
                   padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                   child: ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: _myVotesController
-                          .data[pictureSliverPageViewIndex.value - 1]['comment']
-                          .length,
+                      itemCount: 0,
                       itemBuilder: (context, index) {
                         return Container(
                           padding: const EdgeInsets.all(5.0),
@@ -319,24 +311,18 @@ class _MyVotes extends State<MyVotes> {
                                 crossAxisAlignment: WrapCrossAlignment.start,
                                 children: [
                                   Text(
-                                    _myVotesController.data[
-                                        pictureSliverPageViewIndex.value -
-                                            1]['comment'][index]['commenter'],
+                                    '',
                                     style: Theme.of(context).textTheme.caption,
                                   ),
                                   Text(
-                                    _myVotesController.data[
-                                        pictureSliverPageViewIndex.value -
-                                            1]['comment'][index]['comment'],
+                                    '',
                                     style:
                                         Theme.of(context).textTheme.subtitle1,
                                   )
                                 ],
                               ),
                               Text(
-                                _myVotesController.data[
-                                        pictureSliverPageViewIndex.value - 1]
-                                    ['comment'][index]['updated_at'],
+                                '',
                                 style: Theme.of(context).textTheme.overline,
                               )
                             ],

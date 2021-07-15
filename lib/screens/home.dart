@@ -13,14 +13,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePage extends State<HomePage> {
-  final _userController = Get.put(UserController());
+  // final _userController = Get.put(UserController());
   @override
   void initState() {
     super.initState();
-    _userController.userDetails();
+    // _userController.userDetails();
 
-    GetStorage().listenKey(
-        'access_token', (value) => print('from listen token $value'));
+    // GetStorage().listenKey(
+    //     'access_token', (value) => print('from listen token $value'));
   }
 
   @override

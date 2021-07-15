@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:get/get.dart';
+import 'package:v2/apis.dart';
+import 'package:v2/controllers/old_api_controller/authontication_controller.dart';
 import 'package:v2/controllers/login_controller.dart';
 import 'package:v2/screens/home.dart';
 import 'package:v2/screens/school_home.dart';
@@ -15,7 +17,7 @@ class _Login extends State<Login> with WidgetsBindingObserver {
   PageController _pageController =
       PageController(initialPage: 0, keepPage: false);
   bool _passwordVisible = false;
-  final loginController = Get.put(LoginController());
+  final loginController = Get.put(AuthonticationController());
   final _userFormState = GlobalKey<FormState>();
   final _schoolFormState = GlobalKey<FormState>();
   final _wardFormState = GlobalKey<FormState>();
@@ -29,7 +31,7 @@ class _Login extends State<Login> with WidgetsBindingObserver {
       case AppLifecycleState.paused:
         break;
       case AppLifecycleState.inactive:
-        loginController.clearValues();
+        // loginController.clearValues();
         print('App in active');
         break;
       case AppLifecycleState.resumed:
@@ -292,7 +294,15 @@ class _Login extends State<Login> with WidgetsBindingObserver {
                       },
                       child: Text('Sign up')),
                   Obx(() {
-                    if (loginController.isSuccess.value) {
+                    if (loginController.isLoading.value) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                      );
+                    }
+                    if (loginController.success.value) {
                       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                         Navigator.push(
                             context,
@@ -300,29 +310,22 @@ class _Login extends State<Login> with WidgetsBindingObserver {
                                 builder: (context) => HomePage()));
                       });
                     } else {
-                      if (loginController.successRequest.value) {
+                      if (loginController.success.value) {
                         WidgetsBinding.instance
                             .addPostFrameCallback((timeStamp) {
                           var snackBar = SnackBar(
-                              content: Text(
-                                  '${loginController.loginResponse.value}'));
+                              content:
+                                  Text('${loginController.message.value}'));
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                          loginController.clearValues();
+                          // loginController.clearValues();
                         });
                       }
                     }
                     return ElevatedButton(
                       onPressed: () {
-                        _loginButton("user");
+                        _normalUserLogin();
                       },
-                      child: loginController.isLoading.value
-                          ? Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                              ),
-                            )
-                          : Text('Login'),
+                      child: Text('Login'),
                       style: ButtonStyle(
                           elevation: MaterialStateProperty.resolveWith<double>(
                               (states) => 0),
@@ -423,26 +426,26 @@ class _Login extends State<Login> with WidgetsBindingObserver {
                       },
                       child: Text('Sign up')),
                   Obx(() {
-                    if (loginController.isSuccess.value) {
+                    if (loginController.success.value) {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => SchoolHome()));
                     } else {
-                      if (loginController.successRequest.value) {
+                      if (loginController.success.value) {
                         WidgetsBinding.instance
                             .addPostFrameCallback((timeStamp) {
                           var snackBar = SnackBar(
-                              content: Text(
-                                  '${loginController.loginResponse.value}'));
+                              content:
+                                  Text('${loginController.message.value}'));
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                          loginController.clearValues();
+                          // loginController.clearValues();
                         });
                       }
                     }
                     return ElevatedButton(
                       onPressed: () {
-                        _loginButton("2");
+                        _normalUserLogin();
                       },
                       child: loginController.isLoading.value
                           ? Padding(
@@ -552,26 +555,26 @@ class _Login extends State<Login> with WidgetsBindingObserver {
                       },
                       child: Text('Sign up')),
                   Obx(() {
-                    if (loginController.isSuccess.value) {
+                    if (loginController.success.value) {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => SchoolHome()));
                     } else {
-                      if (loginController.successRequest.value) {
+                      if (loginController.success.value) {
                         WidgetsBinding.instance
                             .addPostFrameCallback((timeStamp) {
                           var snackBar = SnackBar(
-                              content: Text(
-                                  '${loginController.loginResponse.value}'));
+                              content:
+                                  Text('${loginController.success.value}'));
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                          loginController.clearValues();
+                          // loginController.clearValues();
                         });
                       }
                     }
                     return ElevatedButton(
                       onPressed: () {
-                        _loginButton("2");
+                        _normalUserLogin();
                       },
                       child: loginController.isLoading.value
                           ? Padding(
@@ -600,9 +603,16 @@ class _Login extends State<Login> with WidgetsBindingObserver {
     );
   }
 
-  void _loginButton(String userType) {
+  // void _loginButton(String userType) {
+  //   if (_userFormState.currentState.validate()) {
+  //     loginController.signIn(email, password, userType);
+  //   }
+  // }
+
+  void _normalUserLogin() {
     if (_userFormState.currentState.validate()) {
-      loginController.postLogin(email, password, userType);
+      loginController.signIn(
+          email, password, 'ioa;93jfd49;3rawnfjkawjef43', USER_TYPE_VOTER);
     }
   }
 }
