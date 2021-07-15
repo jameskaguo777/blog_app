@@ -1,8 +1,9 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:v2/constants/demo_data.dart';
-import 'package:v2/controllers/my_votes_controller.dart';
+import 'package:v2/controllers/old_api_controller/my_vote_controller.dart';
 
 class MyVotes extends StatefulWidget {
   _MyVotes createState() => _MyVotes();
@@ -18,12 +19,14 @@ class _MyVotes extends State<MyVotes> {
   // final _myVotesController = Get.put(MyVotesController());
   final _formState = GlobalKey<FormState>();
   Widget myVotesWidget;
+  final _myVoteController = Get.put(MyVoteController());
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       myVotesWidget = votingButtons();
+      _myVoteController.getImagesToVote();
     });
   }
 
@@ -32,18 +35,19 @@ class _MyVotes extends State<MyVotes> {
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.all(8.0),
-      child: SingleChildScrollView(child: Obx(() {
-        // _myVotesController.isSuccessful.value
-        //     ? _myVotesController.getParticipant()
-        //     : null;
-        
-          // print('ddata size ${_myVotesController.data.length}');
-          return Column(
-            children: [_voting(context), _comments()],
-          );
-        
-        // return Center(child: CircularProgressIndicator());
-      })),
+      child: SingleChildScrollView(
+          child:
+              // _myVotesController.isSuccessful.value
+              //     ? _myVotesController.getParticipant()
+              //     : null;
+
+              // print('ddata size ${_myVotesController.data.length}');
+              Column(
+        children: [_voting(context), _comments()],
+      )
+
+          // return Center(child: CircularProgressIndicator());
+          ),
     );
   }
 
@@ -83,20 +87,26 @@ class _MyVotes extends State<MyVotes> {
                 controller: _pictureSliderPageController,
                 itemBuilder:
                     (BuildContext context, pictureSliverPageViewIndex) {
-                  return Image.network(
-                    '',
-                    loadingBuilder: (context, widget, events) {
-                      return events == null
-                          ? widget
-                          : Center(
-                              child: Wrap(
-                              children: [
-                                CircularProgressIndicator(),
-                                Text(
-                                    'Downloaded ${events.cumulativeBytesLoaded}/${events.expectedTotalBytes}'),
-                              ],
-                            ));
-                    },
+                  return CarouselSlider.builder(
+                    itemCount: 2,
+                    itemBuilder: (BuildContext context, int itemIndex,
+                            int pageViewIndex) =>
+                        Image.network(
+                      'https://i.pinimg.com/originals/5b/b4/8b/5bb48b07fa6e3840bb3afa2bc821b882.jpg',
+                      loadingBuilder: (context, widget, events) {
+                        return events == null
+                            ? widget
+                            : Center(
+                                child: Wrap(
+                                children: [
+                                  CircularProgressIndicator(),
+                                  Text(
+                                      'Downloaded ${events.cumulativeBytesLoaded}/${events.expectedTotalBytes}'),
+                                ],
+                              ));
+                      },
+                    ),
+                    options: null,
                   );
                 }),
           ),
