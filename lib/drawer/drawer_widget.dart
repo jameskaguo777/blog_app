@@ -25,12 +25,12 @@ class DrawerWidgetT extends StatelessWidget {
                       CircleAvatar(
                         child: Icon(Icons.person),
                       ),
-                      Obx(() {
-                        return Text(
+                      // Obx(() {
+                        Text(
                           'Not Set',
                           style: TextStyle(color: Colors.white),
-                        );
-                      }),
+                        ),
+                      // }),
                     ],
                   )
                 ],

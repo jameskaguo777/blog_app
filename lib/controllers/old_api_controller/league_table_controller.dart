@@ -21,7 +21,6 @@ class LeagueTableController extends GetxController {
     message.value = '';
     isLoading.toggle();
     final response = await http.get(Uri.parse(GET_COMPETITIONS));
-
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       success.value = data['success'];
@@ -37,6 +36,9 @@ class LeagueTableController extends GetxController {
   }
 
   void getLeagueTables(String competitionID) async {
+    isLoading.toggle();
+    message.value = '';
+    success.value = false;
     var data = Map<String, String>();
     data['competition_id'] = competitionID;
 
@@ -53,5 +55,6 @@ class LeagueTableController extends GetxController {
         message.value = dataJ['message'];
       }
     }
+    isLoading.toggle();
   }
 }

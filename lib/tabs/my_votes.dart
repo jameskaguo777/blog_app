@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:v2/apis.dart';
 import 'package:v2/constants/demo_data.dart';
 import 'package:v2/controllers/old_api_controller/my_vote_controller.dart';
 
@@ -13,7 +14,7 @@ class _MyVotes extends State<MyVotes> {
   PageController _pictureSliderPageController =
       PageController(initialPage: 0, keepPage: true);
   // PageController _votingButtonsPageContrtoller = PageController(initialPage: 0);
-  var pictureSliverPageViewIndex = 1.obs;
+  var pictureSliverPageViewIndex = 0.obs;
   var _currentSliderValue = 20.0.obs;
   var commentText = ''.obs;
   // final _myVotesController = Get.put(MyVotesController());
@@ -24,9 +25,13 @@ class _MyVotes extends State<MyVotes> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    Future.delayed(Duration(seconds: 1)).then((_) {
       myVotesWidget = votingButtons();
       _myVoteController.getImagesToVote();
+      if (_myVoteController.images.isNotEmpty) {
+        _myVoteController.getComments(
+            _myVoteController.images[pictureSliverPageViewIndex.value]['id']);
+      }
     });
   }
 
@@ -36,83 +41,97 @@ class _MyVotes extends State<MyVotes> {
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.all(8.0),
       child: SingleChildScrollView(
-          child:
-              // _myVotesController.isSuccessful.value
-              //     ? _myVotesController.getParticipant()
-              //     : null;
+          child: Column(
+        children: [
+          Obx(() {
+            if (_myVoteController.isLoading.value) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              if (_myVoteController.success.value) {
 
-              // print('ddata size ${_myVotesController.data.length}');
-              Column(
-        children: [_voting(context), _comments()],
-      )
-
-          // return Center(child: CircularProgressIndicator());
-          ),
+                return _voting(context);
+              } else {
+                if (_myVoteController.message.value != '') {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(_myVoteController.message.value),
+                  ));
+                }
+                return Center(
+                  child: Text('There is some error try again'),
+                );
+              }
+            }
+          }),
+          Obx(() => _myVoteController.isLoadingComment.value
+              ? Center(child: CircularProgressIndicator())
+              : _comments()),
+        ],
+      )),
     );
   }
 
   Widget _voting(BuildContext context) => Container(
         width: double.infinity,
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Challenge:'),
-            Container(
-              width: double.infinity,
-              margin: const EdgeInsets.fromLTRB(0, 8.0, 0, 8.0),
-              padding: const EdgeInsets.all(8.0),
-              child: Text(''),
-              color: Colors.white,
-            ),
-            _pictureSlider(context)
-          ],
-        ),
+        child: _pictureSlider(context),
       );
 
   Widget _pictureSlider(BuildContext context) {
     return Container(
-      child: Column(
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.width,
-            child: PageView.builder(
-                itemCount: 2,
-                pageSnapping: true,
-                physics: new NeverScrollableScrollPhysics(),
-                onPageChanged: (i) => pictureSliverPageViewIndex.value = i,
-                scrollDirection: Axis.horizontal,
-                controller: _pictureSliderPageController,
-                itemBuilder:
-                    (BuildContext context, pictureSliverPageViewIndex) {
-                  return CarouselSlider.builder(
-                    itemCount: 2,
-                    itemBuilder: (BuildContext context, int itemIndex,
-                            int pageViewIndex) =>
-                        Image.network(
-                      'https://i.pinimg.com/originals/5b/b4/8b/5bb48b07fa6e3840bb3afa2bc821b882.jpg',
-                      loadingBuilder: (context, widget, events) {
-                        return events == null
-                            ? widget
-                            : Center(
-                                child: Wrap(
-                                children: [
-                                  CircularProgressIndicator(),
-                                  Text(
-                                      'Downloaded ${events.cumulativeBytesLoaded}/${events.expectedTotalBytes}'),
-                                ],
-                              ));
-                      },
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height * .855,
+      child: PageView.builder(
+          itemCount: _myVoteController.images.length,
+          pageSnapping: true,
+          physics: new NeverScrollableScrollPhysics(),
+          onPageChanged: (i) => pictureSliverPageViewIndex.value = i,
+          scrollDirection: Axis.horizontal,
+          controller: _pictureSliderPageController,
+          itemBuilder: (BuildContext context, pictureSliverPageViewIndex) {
+            return Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Challenge:'),
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.fromLTRB(0, 8.0, 0, 8.0),
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(_myVoteController.competitionName.value),
+                    color: Colors.white,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    child: InteractiveViewer(
+                      panEnabled: false, // Set it to false
+                      boundaryMargin: EdgeInsets.all(100),
+                      minScale: 0.5,
+                      maxScale: 2,
+                      child: Image.network(
+                        IMAGE_SOURCE_BASE_URL +
+                            _myVoteController.images[pictureSliverPageViewIndex]
+                                ['url'],
+                        fit: BoxFit.contain,
+                        loadingBuilder: (context, widget, events) {
+                          return events == null
+                              ? widget
+                              : Center(
+                                  child: Wrap(
+                                  children: [
+                                    CircularProgressIndicator(),
+                                    Text(
+                                        'Downloaded ${events.cumulativeBytesLoaded}/${events.expectedTotalBytes}'),
+                                  ],
+                                ));
+                        },
+                      ),
                     ),
-                    options: null,
-                  );
-                }),
-          ),
-          _votingButtonsPager(),
-        ],
-      ),
+                  ),
+                  _votingButtonsPager(),
+                ]);
+          }),
     );
   }
 
@@ -120,6 +139,8 @@ class _MyVotes extends State<MyVotes> {
     return Container(
         height: MediaQuery.of(context).size.height * .18,
         child: AnimatedSwitcher(
+          switchInCurve: Curves.easeInOut,
+          switchOutCurve: Curves.easeInOutExpo,
           duration: Duration(microseconds: 1000),
           child: myVotesWidget,
         ));
@@ -134,15 +155,17 @@ class _MyVotes extends State<MyVotes> {
         children: [
           ElevatedButton(
             onPressed: () {
-              // if (_myVotesController.data.length - 1 >=
-              //         pictureSliverPageViewIndex.value &&
-              //     pictureSliverPageViewIndex.value != 1) {
-              //   pictureSliverPageViewIndex.value--;
-              //   _pictureSliderPageController.animateToPage(
-              //       pictureSliverPageViewIndex.value,
-              //       duration: Duration(microseconds: 2000),
-              //       curve: Curves.easeIn);
-              // }
+              if (CHALLECHES['challenges'].length >=
+                      pictureSliverPageViewIndex.value &&
+                  pictureSliverPageViewIndex.value != 0) {
+                pictureSliverPageViewIndex--;
+                _myVoteController.getComments(_myVoteController
+                    .images[pictureSliverPageViewIndex.value]['id']);
+                _pictureSliderPageController.animateToPage(
+                    pictureSliverPageViewIndex.value,
+                    duration: Duration(microseconds: 2000),
+                    curve: Curves.easeIn);
+              }
             },
             style: ButtonStyle(
                 elevation:
@@ -186,18 +209,19 @@ class _MyVotes extends State<MyVotes> {
               )),
           ElevatedButton(
             onPressed: () {
-              // print('picture index ${pictureSliverPageViewIndex.value}');
-              // if (_myVotesController.data.length - 1 >
-              //     pictureSliverPageViewIndex.value) {
-              //   pictureSliverPageViewIndex.value++;
-              //   _pictureSliderPageController.animateToPage(
-              //       pictureSliverPageViewIndex.value,
-              //       duration: Duration(microseconds: 2000),
-              //       curve: Curves.easeIn);
-              //   // print(pictureSliverPageViewIndex);
-              // } else {
-              //   // print(pictureSliverPageViewIndex);
-              // }
+              if (CHALLECHES['challenges'].length >
+                  pictureSliverPageViewIndex.value) {
+                pictureSliverPageViewIndex++;
+                _myVoteController.getComments(_myVoteController
+                    .images[pictureSliverPageViewIndex.value]['id']);
+                _pictureSliderPageController.animateToPage(
+                    pictureSliverPageViewIndex.value,
+                    duration: Duration(microseconds: 2000),
+                    curve: Curves.easeIn);
+                print(pictureSliverPageViewIndex);
+              } else {
+                print(pictureSliverPageViewIndex);
+              }
             },
             style: ButtonStyle(
                 elevation:
@@ -218,39 +242,53 @@ class _MyVotes extends State<MyVotes> {
 
   Widget _ratingSlider() {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          Text('Slide the slider to rate the picture in % higher the better.'),
-          Text('Current value $_currentSliderValue%'),
-          Obx(() {
-            return Slider(
-              value: _currentSliderValue.value,
-              min: 0,
-              max: 100,
-              divisions: 10,
-              label: _currentSliderValue.round().toString(),
-              onChanged: (double value) {
-                _currentSliderValue.value = value;
-              },
-            );
-          }),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: TextButton(
-                onPressed: () {
-                  // _votingButtonsPageContrtoller.animateToPage(0,
-                  //     duration: Duration(milliseconds: 500),
-                  //     curve: Curves.easeOut);
-                  setState(() {
-                    myVotesWidget = votingButtons();
-                  });
+        padding: const EdgeInsets.all(8.0),
+        child: Obx(() {
+          return Column(
+            children: [
+              Text(
+                  'Slide the slider to rate the picture in % higher the better.'),
+              Text('Current value $_currentSliderValue.value%'),
+              Slider(
+                value: _currentSliderValue.value,
+                min: 0,
+                max: 100,
+                divisions: 10,
+                label: _currentSliderValue.round().toString(),
+                onChanged: (double value) {
+                  _currentSliderValue.value = value;
                 },
-                child: Text('Submit')),
-          )
-        ],
-      ),
-    );
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    onPressed: () => {
+                      setState(() {
+                        myVotesWidget = votingButtons();
+                      })
+                    },
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        _myVoteController.vote(
+                            _currentSliderValue.round().toString(),
+                            pictureSliverPageViewIndex.value.toString());
+                        setState(() {
+                          myVotesWidget = votingButtons();
+                        });
+                      },
+                      child: Text('Submit'))
+                ],
+              ),
+            ],
+          );
+        }));
   }
 
   Widget _comments() {
@@ -297,13 +335,13 @@ class _MyVotes extends State<MyVotes> {
                     border:
                         OutlineInputBorder(borderSide: BorderSide(width: 2))),
               )),
-          false
+          _myVoteController.comments.isNotEmpty
               ? Container(
                   padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                   child: ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: 0,
+                      itemCount: _myVoteController.comments.length,
                       itemBuilder: (context, index) {
                         return Container(
                           padding: const EdgeInsets.all(5.0),
@@ -315,25 +353,34 @@ class _MyVotes extends State<MyVotes> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Wrap(
-                                direction: Axis.vertical,
-                                alignment: WrapAlignment.start,
-                                crossAxisAlignment: WrapCrossAlignment.start,
-                                children: [
-                                  Text(
-                                    '',
-                                    style: Theme.of(context).textTheme.caption,
-                                  ),
-                                  Text(
-                                    '',
-                                    style:
-                                        Theme.of(context).textTheme.subtitle1,
-                                  )
-                                ],
+                              Flexible(
+                                flex: 2,
+                                child: Wrap(
+                                  direction: Axis.vertical,
+                                  alignment: WrapAlignment.start,
+                                  crossAxisAlignment: WrapCrossAlignment.start,
+                                  children: [
+                                    Text(
+                                      _myVoteController.comments[index]['name'],
+                                      style:
+                                          Theme.of(context).textTheme.caption,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    RichText(
+                                      text: TextSpan(
+                                          text: _myVoteController
+                                              .comments[index]['review']),
+                                    )
+                                  ],
+                                ),
                               ),
-                              Text(
-                                '',
-                                style: Theme.of(context).textTheme.overline,
+                              Flexible(
+                                flex: 1,
+                                child: Text(
+                                  _myVoteController.comments[index]
+                                      ['created_at'],
+                                  style: Theme.of(context).textTheme.overline,
+                                ),
                               )
                             ],
                           ),

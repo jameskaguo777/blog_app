@@ -35,7 +35,7 @@ class _HomePage extends State<HomePage> {
             automaticIndicatorColorAdjustment: true,
             indicatorSize: TabBarIndicatorSize.tab,
             labelStyle: TextStyle(
-                fontWeight: FontWeight.w500, decoration: TextDecoration.none),
+                fontWeight: FontWeight.w500, decoration: TextDecoration.none, fontSize: 12),
             tabs: [
               Tab(
                 child: Text('MY VOTES'),

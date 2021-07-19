@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:v2/controllers/old_api_controller/events_controller.dart';
 import 'package:v2/screens/challenge_details.dart';
 import 'package:v2/screens/event.dart';
 
@@ -7,24 +9,42 @@ class EventsTab extends StatefulWidget {
 }
 
 class _EventsTab extends State<EventsTab> {
+  final _eventController = Get.put(EventController());
+
+  @override
+  void initState() {
+    super.initState();
+    _eventController.getPost();
+    _eventController.getCompetition();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            _titleContainer('Current Update'),
-            _newsCard(
-                'Maji ya kunywa',
-                'Something is coming and it is big and small a girl with stones comes to combe.',
-                'https://pbs.twimg.com/media/EM6UnjWXkAEE1RD.jpg'),
-            _availableCompetions(),
-            _updateLists()
-          ],
-        ),
-      ),
+      child: SingleChildScrollView(child: Obx(() {
+        if (_eventController.isLoading.value) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          if (_eventController.posts.isNotEmpty) {
+            return Column(children: [
+              _titleContainer('Current Update'),
+              _newsCard(_eventController.posts[0]['title'], '_',
+                  'https://pbs.twimg.com/media/EM6UnjWXkAEE1RD.jpg'),
+              ..._eventController.competitions
+                  .map((element) => _availableCompetions(element['name'])),
+              _updateLists()
+            ]);
+          } else {
+            return Center(
+              child: Text('No availble post yet'),
+            );
+          }
+        }
+      })),
     );
   }
 
@@ -92,8 +112,8 @@ class _EventsTab extends State<EventsTab> {
             ),
             Image.network(
               inageURL,
-              fit: BoxFit.cover,
-              width: MediaQuery.of(context).size.width * .3,
+              fit: BoxFit.contain,
+              width: MediaQuery.of(context).size.width * .26,
             )
           ],
         ),
@@ -101,7 +121,7 @@ class _EventsTab extends State<EventsTab> {
     );
   }
 
-  Widget _availableCompetions() {
+  Widget _availableCompetions(String title) {
     return Container(
       width: MediaQuery.of(context).size.width,
       child: Column(
@@ -121,26 +141,37 @@ class _EventsTab extends State<EventsTab> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Column(
-                  children: [
-                    Text('To what percent is this school toilet clean? 2019'),
-                    Text('School tiolet competition')
-                  ],
+                Flexible(
+                  flex: 2,
+                  child: Wrap(
+                    direction: Axis.vertical,
+                    children: [
+                      Text(
+                        title,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text('School tiolet competition')
+                    ],
+                  ),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ChallengeDetails()));
-                  },
-                  child: Text('Evaluation'),
-                  style: ButtonStyle(
-                      elevation: MaterialStateProperty.resolveWith<double>(
-                          (states) => 0),
-                      shape: MaterialStateProperty.resolveWith<OutlinedBorder>(
-                          (states) => RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)))),
+                Flexible(
+                  flex: 1,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ChallengeDetails()));
+                    },
+                    child: Text('Evaluation'),
+                    style: ButtonStyle(
+                        elevation: MaterialStateProperty.resolveWith<double>(
+                            (states) => 0),
+                        shape:
+                            MaterialStateProperty.resolveWith<OutlinedBorder>(
+                                (states) => RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)))),
+                  ),
                 ),
               ],
             ),
@@ -157,21 +188,29 @@ class _EventsTab extends State<EventsTab> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Column(
-                  children: [
-                    Text('To what percent is this school toilet clean? 2019'),
-                    Text('School tiolet competition')
-                  ],
+                Flexible(
+                  flex: 2,
+                  child: Wrap(
+                    direction: Axis.vertical,
+                    children: [
+                      Text('To what percent is this school toilet clean? 2019'),
+                      Text('School tiolet competition')
+                    ],
+                  ),
                 ),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text('Ended'),
-                  style: ButtonStyle(
-                      elevation: MaterialStateProperty.resolveWith<double>(
-                          (states) => 0),
-                      shape: MaterialStateProperty.resolveWith<OutlinedBorder>(
-                          (states) => RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)))),
+                Flexible(
+                  flex: 1,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: Text('Ended'),
+                    style: ButtonStyle(
+                        elevation: MaterialStateProperty.resolveWith<double>(
+                            (states) => 0),
+                        shape:
+                            MaterialStateProperty.resolveWith<OutlinedBorder>(
+                                (states) => RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)))),
+                  ),
                 ),
               ],
             ),
@@ -185,18 +224,8 @@ class _EventsTab extends State<EventsTab> {
     return Column(
       children: [
         _titleContainer('Other Updates'),
-        Container(
-          child: ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return _newsCard(
-                    'Maji ya kunywa',
-                    'Something is coming and it is big and small a girl with stones comes to combe.',
-                    'https://pbs.twimg.com/media/EM6UnjWXkAEE1RD.jpg');
-              }),
-        ),
+        ..._eventController.posts.map((element) => _newsCard(element['title'],
+            'description', 'https://pbs.twimg.com/media/EM6UnjWXkAEE1RD.jpg')),
       ],
     );
   }

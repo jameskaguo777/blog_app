@@ -1,17 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:v2/controllers/old_api_controller/league_table_controller.dart';
 
 class LeagueTable extends StatefulWidget {
   _LeagueTable createState() => _LeagueTable();
 }
 
 class _LeagueTable extends State<LeagueTable> {
+  final _leagueTableController = Get.put(LeagueTableController());
+  String selectedItem;
+  @override
+  void initState() {
+    super.initState();
+    _leagueTableController.getCompetition();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-          child: Container(
+      child: Container(
         width: MediaQuery.of(context).size.width,
         child: Column(
-          children: [_leagues(context)],
+          children: [
+            Obx(() {
+              if (_leagueTableController.isLoading.value) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                return _leagues(context);
+              }
+            })
+          ],
         ),
       ),
     );
@@ -27,33 +47,31 @@ class _LeagueTable extends State<LeagueTable> {
             Text('Challenge Results:'),
             Container(
                 width: double.infinity,
-                margin: const EdgeInsets.fromLTRB(0, 8.0, 0, 8.0),
-                padding: const EdgeInsets.all(8.0),
+                // margin: const EdgeInsets.fromLTRB(0, 8.0, 0, 8.0),
+                // padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: [
                     Container(
                       width: MediaQuery.of(context).size.width,
                       child: Form(
-                        child: DropdownButtonFormField<String>(
-                          // value: _ratingController,
-                          items: [
-                            'Current Challenge Results',
-                            'Mtakuja Challenge',
-                            'Majuma anasemaje',
-                            'Mlimwa Shule',
-                            'Kwanini Primary School'
-                          ]
-                              .map((label) => DropdownMenuItem(
-                                    child: Text(label),
-                                    value: label,
-                                  ))
-                              .toList(),
-                          hint: Text('Choose a challenge'),
-                          onChanged: (value) {
-                            setState(() {
-                              // _ratingController = value;
-                            });
+                        child: DropdownButton<String>(
+                          value: selectedItem,
+                          onChanged: (String string) =>
+                              setState(() => selectedItem = string),
+                          selectedItemBuilder: (BuildContext context) {
+                            return _leagueTableController.competitions
+                                .map<Widget>((dynamic item) {
+                              print('selected item ${selectedItem}');
+                              return Text(item['name']);
+                            }).toList();
                           },
+                          items: _leagueTableController.competitions
+                              .map((dynamic item) {
+                            return DropdownMenuItem<String>(
+                              child: Text(item['name']),
+                              value: item['id'],
+                            );
+                          }).toList(),
                         ),
                       ),
                     ),
@@ -90,7 +108,9 @@ class _LeagueTable extends State<LeagueTable> {
                         rows: const <DataRow>[
                           DataRow(
                             cells: <DataCell>[
-                              DataCell(Text('1'),),
+                              DataCell(
+                                Text('1'),
+                              ),
                               DataCell(Text('Mwajuma School')),
                               DataCell(Text('1934')),
                               DataCell(Text('69')),

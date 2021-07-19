@@ -8,6 +8,7 @@ class MyVoteController extends GetxController {
   var success = false.obs;
   var competitions = [].obs;
   var message = ''.obs;
+  var isLoadingComment = false.obs;
 
   var isLoading = false.obs;
   GetStorage box = GetStorage();
@@ -63,34 +64,42 @@ class MyVoteController extends GetxController {
     var data = Map<String, String>();
     data['user_id'] = userID;
 
-    final response = await http.post(Uri.parse(GET_PHOTOS_TO_VOTE));
+    try {
+      final response = await http.post(Uri.parse(GET_PHOTOS_TO_VOTE));
 
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-      success.value = data['success'];
-      if (success.value) {
-        message.value = data['message'];
-        competitionID.value = data['competition_id'];
-        competitionName.value = data['competition_name'];
-        competitionStatus.value = data['competition_status'];
-        competitionTheme.value = data['competition_theme'];
-        images.value = data['images'];
-      } else {
-        message.value = data['message'];
-      }
-    } else {}
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        // print(data);
+        success.value = data['success'];
+        if (success.value) {
+          message.value = data['message'];
+          competitionID.value = data['competition_id'];
+          competitionName.value = data['competition_name'];
+          competitionStatus.value = data['competition_status'];
+          competitionTheme.value = data['competition_theme'];
+          images.value = data['images'];
+          print(images);
+        } else {
+          message.value = data['message'];
+        }
+      } else {}
+    } catch (e) {
+      success.value = false;
+      message.value = e.toString();
+    }
+
     isLoading.toggle();
   }
 
   void getComments(String imageID) async {
     success.value = false;
     message.value = '';
-    isLoading.toggle();
+    isLoadingComment.toggle();
     var data = Map<String, String>();
     data['image_id'] = imageID;
 
-    final response = await http.post(Uri.parse(GET_COMMENTS));
-
+    final response = await http.post(Uri.parse(GET_COMMENTS), body: data);
+    print('comments: ${response.body}');
     if (response.statusCode == 200) {
       var dataJ = jsonDecode(response.body);
       success.value = dataJ['success'];
@@ -101,7 +110,7 @@ class MyVoteController extends GetxController {
         message.value = dataJ['message'];
       }
     } else {}
-    isLoading.toggle();
+    isLoadingComment.toggle();
   }
 
   void postComment(String comment, String imageID) async {
@@ -124,6 +133,28 @@ class MyVoteController extends GetxController {
       }
     } else {
       message.value = 'Sever error';
+    }
+    isLoading.toggle();
+  }
+
+  void vote(String vote, String imageID) async {
+    message.value = '';
+    isLoading.toggle();
+    var data = Map<String, String>();
+    data['user_id'] = userID;
+    data['image_id'] = imageID;
+    data['vote'] = vote;
+
+    final response = await http.post(Uri.parse(VOTE__API));
+
+    if (response.statusCode == 200) {
+      var dataJ = jsonDecode(response.body);
+      success.value = dataJ['success'];
+      if (success.value) {
+        message.value = dataJ['message'];
+      } else {
+        message.value = dataJ['message'];
+      }
     }
     isLoading.toggle();
   }

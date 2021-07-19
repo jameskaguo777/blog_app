@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:v2/constants/demo_data.dart';
+import 'package:v2/controllers/old_api_controller/events_controller.dart';
 
 class Event extends StatefulWidget {
   _Event createState() => _Event();
